@@ -11,11 +11,25 @@ load_dotenv()
 
 client = commands.Bot(command_prefix = '!')
 
-reddit = asyncpraw.Reddit(client_id = os.getenv("REDDIT_CLIENT_ID"), 
-                     client_secret = os.getenv("REDDIT_CLIENT_SECRET"), 
-                     username = os.getenv("REDDIT_USERNAME"), 
-                     password = os.getenv("REDDIT_PASSWORD"), 
-                     user_agent = os.getenv("REDDIT_USER_AGENT"))
+reddit = asyncpraw.Reddit(
+    client_id=os.getenv("REDDIT_CLIENT_ID"),
+    client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
+    user_agent=os.getenv("REDDIT_USER_AGENT"),
+    username=os.getenv("REDDIT_USERNAME"),
+    password=os.getenv("REDDIT_PASSWORD"),
+    check_for_updates=False,
+    comment_kind="t1",
+    message_kind="t4",
+    redditor_kind="t2",
+    submission_kind="t3",
+    subreddit_kind="t5",
+    trophy_kind="t6",
+    oauth_url="https://oauth.reddit.com",
+    reddit_url="https://www.reddit.com",
+    short_url="https://redd.it",
+    ratelimit_seconds=5,
+    timeout=16,
+)
 
 @client.event
 async def on_ready():
@@ -45,26 +59,24 @@ async def meme(ctx):
 
     await ctx.send(embed = em)
 
-@client.command
-async def displayembed():
-    embed = discord.Embed(
-        title = 'Title',
-        description = 'This is a description.',
-        color = discord.Color.blue(),
-        
-    )
+@client.command(aliases=['showsub'])
+async def showsubreddit(ctx, input_subreddit):
+    subreddit = await reddit.subreddit(input_subreddit)
 
-    embed.set_footer(text="This is a footer.")
+    # all_subs = []
 
-    embed.set_image(url='https://cdn.discordapp.com/attachments/766444741239504941/859595814891552778/71ouOX4BmIL.png')
-    embed.set_thumbnail(url = 'https://cdn.discordapp.com/attachments/766444741239504941/859595814891552778/71ouOX4BmIL.png')
-    embed.set_author(name='Author name', icon_url='https://cdn.discordapp.com/attachments/766444741239504941/859595814891552778/71ouOX4BmIL.png')
-    embed.add_field(name ='Field name', value='Field Value', inline=False)
-    embed.add_field(name ='Field name', value='Field Value', inline=True)
-    embed.add_field(name ='Field name', value='Field Value', inline=True)
-
-    await client.say(embed = embed)
+    async for submission in subreddit.stream.submissions():
+        display_embed = discord.Embed(title = submission.title)
+        display_embed.set_author(name = "RedditPost Bot 🐢")
+        display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+        await ctx.send(embed = display_embed)
     
-
-
+    # for subs in all_subs:
+        # display_embed = discord.Embed(title = subs.title)
+        # display_embed.set_author(name = "RedditPost Bot 🐢")
+        # display_embed.add_field(name =  "Link:", value = subs.url, inline=True)
+        # display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+        # await ctx.send(embed = display_embed)
+    
 client.run(os.getenv("DISCORD_TOKEN"))
