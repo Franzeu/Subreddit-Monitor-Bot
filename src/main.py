@@ -2,11 +2,15 @@ import discord
 import random
 import asyncpraw
 import os
+import asyncio
 from discord.embeds import Embed 
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord import message
- 
+from discord.ext import tasks
+
+isrunning = True
+
 load_dotenv()
 
 client = commands.Bot(command_prefix = '!')
@@ -41,42 +45,33 @@ async def on_command_error(ctx, error):
         await ctx.send("Command not found.")
 
 @client.command()
-async def meme(ctx):
-    subreddit = await reddit.subreddit("mechmarket")
+async def showsub(ctx, input_subreddit):
 
-    all_subs = []
+    global postloop
 
-    async for submission in subreddit.top(limit = 10):
-        all_subs.append(submission)
+    @tasks.loop(seconds=1)
+    async def postloop(inputsub):
+        subreddit = await reddit.subreddit(input_subreddit)
 
-    random_sub = random.choice(all_subs)
+        async for submission in subreddit.stream.submissions():
+            display_embed = discord.Embed(title = submission.title)
+            display_embed.set_author(name = "RedditPost Bot 🐢")
+            display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+            display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+            display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+            display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+            await ctx.send(embed = display_embed)
+        
+    postloop.start(input_subreddit)
+    await ctx.send("Posting recent posts from " + input_subreddit)
+        
 
-    name = random_sub.title
-    url = random_sub.url
 
-    em = discord.Embed(title = name)
-    em.set_image(url = url)
 
-    await ctx.send(embed = em)
+@client.command()
+async def stopshowing (ctx):
+    postloop.cancel()
+    await ctx.send("Successfully deactivated showsub")
 
-@client.command(aliases=['showsub'])
-async def showsubreddit(ctx, input_subreddit):
-    subreddit = await reddit.subreddit(input_subreddit)
-
-    # all_subs = []
-
-    async for submission in subreddit.stream.submissions():
-        display_embed = discord.Embed(title = submission.title)
-        display_embed.set_author(name = "RedditPost Bot 🐢")
-        display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
-        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-        await ctx.send(embed = display_embed)
-    
-    # for subs in all_subs:
-        # display_embed = discord.Embed(title = subs.title)
-        # display_embed.set_author(name = "RedditPost Bot 🐢")
-        # display_embed.add_field(name =  "Link:", value = subs.url, inline=True)
-        # display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-        # await ctx.send(embed = display_embed)
     
 client.run(os.getenv("DISCORD_TOKEN"))
