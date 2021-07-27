@@ -1,6 +1,7 @@
 import discord
 import random
 import asyncpraw
+import praw
 import os
 import asyncio
 from discord.embeds import Embed 
@@ -8,8 +9,6 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import message
 from discord.ext import tasks
-
-isrunning = True
 
 load_dotenv()
 
@@ -45,7 +44,43 @@ async def on_command_error(ctx, error):
         await ctx.send("Command not found.")
 
 @client.command()
-async def showsub(ctx, input_subreddit):
+async def showtop(ctx, input_subreddit):
+
+    await ctx.send("Posting top 50 posts of all time from " + input_subreddit)
+
+    subreddit = await reddit.subreddit(input_subreddit)
+
+    async for submission in subreddit.top(limit = 50):
+        display_embed = discord.Embed(title = submission.title)
+        display_embed.set_author(name = "RedditPost Bot 🐢")
+        display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+        display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+        display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+        await ctx.send(embed = display_embed)
+
+    await ctx.send("Finished posting top 50 posts of all time from " + input_subreddit)
+
+@client.command()
+async def showhot(ctx, input_subreddit):
+
+    await ctx.send("Posting hot 50 posts from " + input_subreddit)
+
+    subreddit = await reddit.subreddit(input_subreddit)
+
+    async for submission in subreddit.hot(limit = 50):
+        display_embed = discord.Embed(title = submission.title)
+        display_embed.set_author(name = "RedditPost Bot 🐢")
+        display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+        display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+        display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+        await ctx.send(embed = display_embed)
+
+    await ctx.send("Finished hot posts from " + input_subreddit)
+
+@client.command()
+async def showrecent(ctx, input_subreddit):
 
     global postloop
 
@@ -65,8 +100,6 @@ async def showsub(ctx, input_subreddit):
     postloop.start(input_subreddit)
     await ctx.send("Posting recent posts from " + input_subreddit)
         
-
-
 
 @client.command()
 async def stopshowing (ctx):
