@@ -42,24 +42,40 @@ async def on_ready():
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send("Command not found.")
+    
+    if isinstance (error, commands.MissingRequiredArgument):
+        await ctx.send("Missing required argument")
+
 
 @client.command()
-async def showtop(ctx, input_subreddit):
+async def showtop(ctx, input_subreddit, filter):
 
-    await ctx.send("Posting top 50 posts of all time from " + input_subreddit)
+    filter_list = ["day", "month", "year", "all", "hour"]
+
+    if filter not in filter_list:
+        await ctx.send("Incorrect filter")
+        return None
+
+    if filter == "all":
+        await ctx.send("Posting top 50 posts of all time from " + input_subreddit)
+    else:        
+        await ctx.send("Posting top 50 posts of the " + filter + " from " + input_subreddit)
 
     subreddit = await reddit.subreddit(input_subreddit)
 
-    async for submission in subreddit.top(limit = 50):
-        display_embed = discord.Embed(title = submission.title)
+    async for submission in subreddit.top(filter, limit = 50):
+        display_embed = discord.Embed(title = submission.title[0:256])
         display_embed.set_author(name = "RedditPost Bot 🐢")
         display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-        display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+        display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
         display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
         display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
         await ctx.send(embed = display_embed)
 
-    await ctx.send("Finished posting top 50 posts of all time from " + input_subreddit)
+    if filter == "all":
+        await ctx.send("Finished posting top 50 posts of all time from " + input_subreddit)
+    else:
+        await ctx.send("Finished posting top 50 posts of the " + filter + " from " + input_subreddit)
 
 @client.command()
 async def showhot(ctx, input_subreddit):
@@ -69,10 +85,10 @@ async def showhot(ctx, input_subreddit):
     subreddit = await reddit.subreddit(input_subreddit)
 
     async for submission in subreddit.hot(limit = 50):
-        display_embed = discord.Embed(title = submission.title)
+        display_embed = discord.Embed(title = submission.title[0:256])
         display_embed.set_author(name = "RedditPost Bot 🐢")
         display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-        display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+        display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
         display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
         display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
         await ctx.send(embed = display_embed)
@@ -89,10 +105,10 @@ async def showrecent(ctx, input_subreddit):
         subreddit = await reddit.subreddit(input_subreddit)
 
         async for submission in subreddit.stream.submissions():
-            display_embed = discord.Embed(title = submission.title)
+            display_embed = discord.Embed(title = submission.title[0:256])
             display_embed.set_author(name = "RedditPost Bot 🐢")
             display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-            display_embed.add_field(name =  "Link:", value = submission.url, inline=True)
+            display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
             display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
             display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
             await ctx.send(embed = display_embed)
