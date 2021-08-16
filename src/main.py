@@ -10,7 +10,7 @@ from discord.ext import tasks
 #Loads the .env file.
 load_dotenv()
 
-is_running = False
+running = False
 
 #Command prefix used for commands on Discord
 client = commands.Bot(command_prefix = '!')
@@ -88,142 +88,149 @@ async def showtop(ctx, input_subreddit, filter):
 
     filter_list = ["day", "week", "month", "year", "all", "hour"]
 
-    if filter not in filter_list:
-        await ctx.send("Incorrect filter")
-        return None
+    global running
 
-    if filter == "all":
-        await ctx.send("Posting top 50 posts of all time from " + input_subreddit)
-    else:        
-        await ctx.send("Posting top 50 posts of the " + filter + " from " + input_subreddit)
+    if running == False:
+        running = True
 
-    subreddit = await reddit.subreddit(input_subreddit)
+        if filter not in filter_list:
+            await ctx.send("Incorrect filter")
+            return None
 
-    async for submission in subreddit.top(filter, limit = 50):
-        display_embed = discord.Embed(title = submission.title[0:256])
-        display_embed.set_author(name = "RedditPost Bot 🐢")
-        display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-        display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
-        display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
-        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-        await ctx.send(embed = display_embed)
+        if filter == "all":
+            await ctx.send("Posting top 50 posts of all time from " + input_subreddit)
+        else:        
+            await ctx.send("Posting top 50 posts of the " + filter + " from " + input_subreddit)
 
-    if filter == "all":
-        await ctx.send("Finished posting top 50 posts of all time from " + input_subreddit)
+        subreddit = await reddit.subreddit(input_subreddit)
+
+        async for submission in subreddit.top(filter, limit = 50):
+            display_embed = discord.Embed(title = submission.title[0:256])
+            display_embed.set_author(name = "RedditPost Bot 🐢")
+            display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+            display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
+            display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+            display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+            await ctx.send(embed = display_embed)
+
+        running = False
+        if filter == "all":
+            await ctx.send("Finished posting top 50 posts of all time from " + input_subreddit)
+        else:
+            await ctx.send("Finished posting top 50 posts of the " + filter + " from " + input_subreddit)
     else:
-        await ctx.send("Finished posting top 50 posts of the " + filter + " from " + input_subreddit)
+        await ctx.send("Another command is running!")
 
 #Displays the hot 50 posts of the user's requested subreddit.
 @client.command()
 async def showhot(ctx, input_subreddit):
 
-    await ctx.send("Posting hot 50 posts from " + input_subreddit)
+    global running
 
-    subreddit = await reddit.subreddit(input_subreddit)
+    if running == False:
+        running = True
 
-    async for submission in subreddit.hot(limit = 50):
-        display_embed = discord.Embed(title = submission.title[0:256])
-        display_embed.set_author(name = "RedditPost Bot 🐢")
-        display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-        display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
-        display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
-        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-        await ctx.send(embed = display_embed)
+        await ctx.send("Posting hot 50 posts from " + input_subreddit)
 
-    await ctx.send("Finished hot posts from " + input_subreddit)
+        subreddit = await reddit.subreddit(input_subreddit)
+
+        async for submission in subreddit.hot(limit = 50):
+            display_embed = discord.Embed(title = submission.title[0:256])
+            display_embed.set_author(name = "RedditPost Bot 🐢")
+            display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+            display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
+            display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+            display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+            await ctx.send(embed = display_embed)
+
+        running = False
+        await ctx.send("Finished hot posts from " + input_subreddit)
+    else:
+        await ctx.send("Another command is running!")
 
 #Displays the newest 50 posts of the user's requested subreddit
 @client.command()
 async def shownew(ctx, input_subreddit):
 
-    await ctx.send("Posting new 50 posts from " + input_subreddit)
+    global running
 
-    subreddit = await reddit.subreddit(input_subreddit)
+    if running == False:
+        running = True
 
-    async for submission in subreddit.new(limit = 50):
-        display_embed = discord.Embed(title = submission.title[0:256])
-        display_embed.set_author(name = "RedditPost Bot 🐢")
-        display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-        display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
-        display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
-        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-        await ctx.send(embed = display_embed)
+        await ctx.send("Posting new 50 posts from " + input_subreddit)
 
-    await ctx.send("Finished new posts from " + input_subreddit)
+        subreddit = await reddit.subreddit(input_subreddit)
 
-#Displays the newest posts of a subreddit and updates in real time whenever a new post is created. This command only sends posts to the chat
-#that have keywords in the title. Runs until the user tells it to stop by using !stopkeywords
-@client.command()
-async def streamkey(ctx, input_subreddit):
-    
-    global keywordloop
-    global is_running
+        async for submission in subreddit.new(limit = 50):
+            display_embed = discord.Embed(title = submission.title[0:256])
+            display_embed.set_author(name = "RedditPost Bot 🐢")
+            display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+            display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
+            display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+            display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+            await ctx.send(embed = display_embed)
 
-    if is_running == False:
-        is_running = True
-        @tasks.loop(seconds=1)
-        async def keywordloop(inputsub):
-                subreddit = await reddit.subreddit(input_subreddit)
-
-                async for submission in subreddit.stream.submissions():
-                    subtitle = submission.title
-                    if any(keyword in subtitle for keyword in userKeywords):
-                        display_embed = discord.Embed(title = submission.title[0:256])
-                        display_embed.set_author(name = "RedditPost Bot 🐢")
-                        display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-                        display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
-                        display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
-                        display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-                        await ctx.send(embed = display_embed)
+        running = False
+        await ctx.send("Finished new posts from " + input_subreddit)
     else:
         await ctx.send("Another command is running!")
 
-        
-    keywordloop.start(input_subreddit)
-    await ctx.send("Posting streaming posts from " + input_subreddit)
-
-#Displays the newest posts of a subreddit and updates in real time whenever a new post is created. Runs until the user tells it to stop by using !stop
+#Displays the newest posts of a subreddit and updates in real time whenever a new post is created. Additionally, if keywords are added, the bot will
+#only send posts to the chat that have keywords in the reddit post title. Runs until the user tells it to stop by using the command !stop
 @client.command()
 async def stream(ctx, input_subreddit):
 
     global streamloop
-    global is_running
+    global running
 
-    if is_running == False:
-        is_running = True
-        @tasks.loop(seconds=1)
-        async def streamloop(inputsub):
-            subreddit = await reddit.subreddit(input_subreddit)
+    if len(userKeywords) == 0:
+        if running == False:
+            running = True
+            @tasks.loop(seconds=1)
+            async def streamloop(inputsub):
+                subreddit = await reddit.subreddit(input_subreddit)
 
-            async for submission in subreddit.stream.submissions():
-                display_embed = discord.Embed(title = submission.title[0:256])
-                display_embed.set_author(name = "RedditPost Bot 🐢")
-                display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
-                display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
-                display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
-                display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
-                await ctx.send(embed = display_embed)
+                async for submission in subreddit.stream.submissions():
+                    display_embed = discord.Embed(title = submission.title[0:256])
+                    display_embed.set_author(name = "RedditPost Bot 🐢")
+                    display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+                    display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
+                    display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+                    display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+                    await ctx.send(embed = display_embed)
+        else:
+            await ctx.send("Another command is running!")
     else:
-        await ctx.send("Another command is running!")
+        if running == False:
+            running = True
+            @tasks.loop(seconds=1)
+            async def streamloop(inputsub):
+                    subreddit = await reddit.subreddit(input_subreddit)
+
+                    async for submission in subreddit.stream.submissions():
+                        subtitle = submission.title
+                        if any(keyword in subtitle for keyword in userKeywords):
+                            display_embed = discord.Embed(title = submission.title[0:256])
+                            display_embed.set_author(name = "RedditPost Bot 🐢")
+                            display_embed.add_field(name =  "Subreddit:", value = input_subreddit, inline=False)
+                            display_embed.add_field(name =  "Link:", value = submission.shortlink, inline=True)
+                            display_embed.add_field(name =  "Posted by:", value = submission.author, inline=True)
+                            display_embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/435613438560043008/862045274037813258/375ce83551aafaec5f2d5ffef338b2fa.png")
+                            await ctx.send(embed = display_embed)
+        else:
+            await ctx.send("Another command is running!")
+
         
     streamloop.start(input_subreddit)
-    await ctx.send("Posting streaming posts from " + input_subreddit)
+    await ctx.send("Streaming posts from " + input_subreddit)
 
 #Stops the !stream command.
 @client.command()
 async def stop(ctx):
-    global is_running
+    global running
     streamloop.cancel()
-    is_running = False
+    running = False
     await ctx.send("Successfully deactivated !stream")
-
-# Stops the !streamkey command.
-@client.command()
-async def stopkey(ctx):
-    global is_running
-    keywordloop.cancel()
-    is_running = False
-    await ctx.send("Successfully deactivated !streamkeywords")
 
 #Runs the bot
 client.run(os.getenv("DISCORD_TOKEN"))
