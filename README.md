@@ -40,33 +40,33 @@ After filling in all the necessary information in your .env, you can go ahead an
 There are several commands that you can use when using this bot. Here are all the commands that are available!
 
 ```
-**!allcommands**: Shows all available commands that you can use
+!allcommands: Shows all available commands that you can use
 
-**!add**: 
+!add: 
 You can add a keyword so that !stream will only send posts that have the keywords in the title
 
-**!show**:  
+!show:  
 Shows all the keywords
 
-**!clear**: 
+!clear: 
 Clears all the keywords
 
-**!stop**: 
+!stop: 
 Stops !stream
 
-**!limit**:  
+!limit:  
 You can limit the number of posts that !top, !hot, and !new send
 
-**!top**: 
+!top: 
 Displays all the top posts of a specific subreddit during a specific time
 
-**!hot**: 
+!hot: 
 Displays hot posts of a specific subreddit
 
-**!new**:
+!new:
 Displays the newest posts of a specific subreddit
 
-**!stream**: 
+!stream: 
 Displays the newest posts of a subreddit and updates in real time whenever a new post is created. Once a new post is created, the bot will @ the users in the 'Notify' role. Additionally, if keywords are added, the bot will only send posts to the chat that have keywords in the reddit post title. This command will run forever until the user tells it to stop by using the command !stop
 ```
 
