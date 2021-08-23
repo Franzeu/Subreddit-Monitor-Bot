@@ -1,6 +1,12 @@
 # RedditPosts-Bot
 RedditPosts Bot is a Discord bot that retreives reddit submissions and streams it in real time.
 
+
+
+https://user-images.githubusercontent.com/43397903/130386636-197305dd-8626-4758-b433-ce88d389bc85.mp4
+
+
+
 ## Installation
 
 Before using this bot, make sure you have created an app in https://www.reddit.com/prefs/apps and bot in your discord development portal. 
