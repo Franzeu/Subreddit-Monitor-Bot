@@ -1,6 +1,13 @@
 # RedditPosts-Bot
 RedditPosts-Bot is a Discord bot that retreives reddit submissions and streams it in real time.
 
+### Features
+Here are all the features that RedditPosts-Bot
+- Stream a subreddit and receive the newest posts whenever they are created
+- Add keywords when streaming a subreddit so that you only receive posts that have the keywords in the title
+- Look at the top, hot, and newests post in a subreddit
+- Limit the amount of posts that the bot sends whenever looking at the top, hot, and newest posts
+
 ![Alt text](assets/Title.gif?raw=true "Title")
 
 ## Installation
@@ -37,7 +44,9 @@ After filling in all the necessary information in your .env, you can go ahead an
 
 ## Running the application
 
-There are several commands that you can use when using this bot. Here are all the commands that are available!
+The prefix to use the bot is "!". There are several commands that you can use when using this bot. Here are all the commands that are available!
+
+![Alt text](assets/instructions.gif?raw=true "Instructions")
 
 ```
 !allcommands: Shows all available commands that you can use
