@@ -52,5 +52,35 @@ There are several commands that you can use when using this bot. Here are all th
 !stream [subreddit]
 ```
 
+!allcommands: 
+Shows all available commands that you can use
+
+!add: 
+You can add a keyword so that !stream will only send posts that have the keywords in the title
+
+!show:  
+Shows all the keywords
+
+!clear: 
+Clears all the keywords
+
+!stop: 
+Stops !stream
+
+!limit:  
+You can limit the number of posts that !top, !hot, and !new send
+
+!top: 
+Displays all the top posts of a specific subreddit during a specific time
+
+!hot: 
+Displays hot posts of a specific subreddit
+
+!new:
+Displays the newest posts of a specific subreddit
+
+!stream: 
+Displays the newest posts of a subreddit and updates in real time whenever a new post is created. Once a new post is created, the bot will @ the users in the 'Notify' role. Additionally, if keywords are added, the bot will only send posts to the chat that have keywords in the reddit post title. This command will run forever until the user tells it to stop by using the command !stop
+
 ## License
 Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. See LICENSE for more information.
