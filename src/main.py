@@ -100,7 +100,7 @@ async def limit(ctx, number_of_posts):
     string_post_limit = str(post_limit)
     await ctx.send("Limited the amount of posts to " + string_post_limit + " ✅")
 
-# Displays the top 50 posts of the user's requested subreddit during a specific time.
+# Displays the top posts of the user's requested subreddit during a specific time.
 @client.command()
 async def top(ctx, input_subreddit, filter):
 
@@ -158,7 +158,7 @@ async def top(ctx, input_subreddit, filter):
     else:
         await ctx.send("**Another command is running!** 🚫")
 
-# Displays the hot 50 posts of the user's requested subreddit.
+# Displays hot posts of the user's requested subreddit.
 @client.command()
 async def hot(ctx, input_subreddit):
 
