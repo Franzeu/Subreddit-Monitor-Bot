@@ -3,7 +3,7 @@ RedditPosts-Bot is a Discord bot that retreives reddit submissions and streams i
 
 ### Features
 Here are all the features that RedditPosts-Bot
-- Stream a subreddit and receive the newest posts whenever they are created
+- Stream a subreddit and get notified when a new post gets posted
 - Add keywords when streaming a subreddit so that you only receive posts that have the keywords in the title
 - Look at the top, hot, and newests post in a subreddit
 - Limit the amount of posts that the bot sends whenever looking at the top, hot, and newest posts
