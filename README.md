@@ -1,8 +1,8 @@
-# RedditPosts-Bot
-RedditPosts-Bot is a Discord bot that retreives reddit submissions and streams it in real time.
+# Subreddit-Monitor-Bot
+Subreddit-Monitor-Bot is a Discord bot that retreives reddit submissions and streams it in real time.
 
 ### Features
-Here are all the features that RedditPosts-Bot
+Here are all the features that Subreddit-Monitor-Bot
 - Stream a subreddit and get notified when a new post gets posted
 - Add keywords when streaming a subreddit so that you only receive posts that have the keywords in the title
 - Look at the top, hot, and newests post in a subreddit
@@ -26,7 +26,7 @@ pip install asyncpraw
 After installing both APIs. Go ahead and clone this repository. 
 
 ```bash
-https://github.com/Franzeu/RedditPosts-Bot.git
+https://github.com/Franzeu/Subreddit-Monitor-Bot.git
 ```
 
 Once cloned, go ahead and go into the src folder and create a .env. In the .env, go ahead and fill in the blanks
